@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:storage_management_system/controllers/auth_provider.dart';
-import 'package:storage_management_system/screens/auth_screen.dart';
+import 'package:storage_management_system/providers/auth_provider.dart';
+import 'package:storage_management_system/screens/splash_screen.dart';
 
 void main() {
-  runApp(const StorageManagementSystem());
+  runApp(StorageManagementSystem());
 }
 
 class StorageManagementSystem extends StatelessWidget {
@@ -39,7 +39,8 @@ class StorageManagementSystem extends StatelessWidget {
         // ================================================================
         // HOME
         // ================================================================
-        home: const AuthScreen(),
+        // home: const AuthScreen(),
+        home: SplashScreen(),
       ),
     );
   }
