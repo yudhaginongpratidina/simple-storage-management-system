@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:storage_management_system/screens/main_screen.dart';
 
 class AuthProvider extends ChangeNotifier {
+  // PREFERENCE
+  late SharedPreferences _sharedPref;
+
   // GLOBAL STATE
   final formAuthentication = GlobalKey<FormState>();
   StateAuth authState = StateAuth.initial;
@@ -32,10 +37,16 @@ class AuthProvider extends ChangeNotifier {
 
 // FOR PROCESS LOGIN
   void processLogin(BuildContext context) async {
+    // INITIALIZE PREFERENCE
+    _sharedPref = await SharedPreferences.getInstance();
+
     if (emailController.text == 'admin' &&
         passwordController.text == 'administrator') {
       authState = StateAuth.success;
       alertAuthSuccess(context, 'Login Success');
+
+      // SAVE DATA TO PREFERENCE
+      _sharedPref.setString('email', emailController.text);
     } else {
       authState = StateAuth.error;
       alertAuthFailed(context, 'Credentials Invalid');
@@ -63,13 +74,29 @@ class AuthProvider extends ChangeNotifier {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () {
+                if (formTitle == 'Sign In') {
+                  emailController.clear();
+                  passwordController.clear();
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => MainScreen(
+                              email: _sharedPref.getString('email'),
+                            )),
+                  );
+                } else {
+                  Navigator.pop(context);
+                }
+              },
               child: const Text('OK'),
             ),
           ],
         );
       },
     );
+    notifyListeners();
   }
 
 // FOR ALERT IF AUTH FAILED
@@ -98,6 +125,7 @@ class AuthProvider extends ChangeNotifier {
         );
       },
     );
+    notifyListeners();
   }
 
 // FOR TOGGLE OBSCURE PASSWORD
