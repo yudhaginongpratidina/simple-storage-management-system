@@ -3,3 +3,9 @@
 # ==================================================
 APP_PORT=8000
 APP_HOST=localhost
+
+
+# ==================================================
+# KONFIGURASI DATABASE
+# ==================================================
+DATABASE_URL="mysql://johndoe:randompassword@localhost:3306/mydb"
