@@ -1,26 +1,21 @@
 {
   "name": "backend",
-  "version": "1.1.0",
+  "version": "1.0.0",
+  "description": "backend for simple storage management system",
   "main": "app.js",
-  "keywords": [
-    "backend",
-    "node",
-    "express",
-    "storage-management-system"
-  ],
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "keywords": [],
   "author": "Yudha Ginong Pratidina",
   "license": "ISC",
-  "description": "backend for storage management system",
-  "scripts": {
-    "start": "node ./src/app.js",
-    "dev": "nodemon ./src/app.js"
+  "devDependencies": {
+    "nodemon": "^3.1.1"
   },
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.0"
   }
 }

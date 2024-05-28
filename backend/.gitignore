@@ -1,5 +1,13 @@
-# FOLDERS
-node_modules
-
 # FILES
 .env
+.DS_Store
+*.iml
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+
+# FOLDERS
+.DS_Store
+node_modules

@@ -1,3 +1,5 @@
-APP_NAME=xxxx
-APP_HOST=xxxx
-APP_PORT=xxxx
+# ==================================================
+# KONFIGURASI ENVIROMENT UNTUK APLIKASI BACKEND
+# ==================================================
+APP_PORT=8000
+APP_HOST=localhost
