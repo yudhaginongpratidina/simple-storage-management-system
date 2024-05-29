@@ -9,6 +9,8 @@ const router = express.Router();
 // =======================================================================
 const userController = require("./controllers/user-controller");
 const CategoryController = require("./controllers/category-controller");
+const ProductController = require("./controllers/product-controller");
+
 
 
 // =======================================================================
@@ -28,6 +30,10 @@ router.post("/categories", CategoryController.createCategory)
 router.patch("/categories/:id", CategoryController.updateCategoryById)
 router.delete("/categories/:id", CategoryController.deleteCategoryById)
 
+router.get("/products/:userid", ProductController.getAllProductByUserId)
+router.post("/products/:userid", ProductController.addProductByUserId)
+router.patch("/products/:userid/:id", ProductController.updateProductByUserId)
+router.delete("/products/:id", ProductController.deleteProductById)
 
 
 module.exports = router
