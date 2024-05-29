@@ -21,6 +21,14 @@ http://localhost:8000/users
 
 ## API UNTUK CATEGORY
 
+| **METHOD** | **END POINT**        | **DESKRIPSI**                                 |
+|------------|----------------------|-----------------------------------------------|
+| GET        | /categories          | Mendapatkan semua data kategori               |
+| GET        | /categories/:id      | Mendapatkan data kategori berdasarkan id      |
+| POST       | /categories          | Mebuat / menambah data kategori               |
+| PATCH      | /categories/:id      | Mengupdate data kategori berdasarkan id       |
+| DELETE     | /categories/:id      | Menghapus data kategori berdasarkan id        |
+
 
 ## API UNTUK PRODUCT
 

@@ -8,6 +8,7 @@ const router = express.Router();
 // IMPORT CONTROLLERS
 // =======================================================================
 const userController = require("./controllers/user-controller");
+const CategoryController = require("./controllers/category-controller");
 
 
 // =======================================================================
@@ -19,6 +20,13 @@ router.post("/users", userController.createUser)
 router.delete("/users/:id", userController.deleteUserById)
 
 router.post('/login', userController.loginUser)
+
+
+router.get("/categories", CategoryController.getCategories)
+router.get("/categories/:id", CategoryController.getCategoryById)
+router.post("/categories", CategoryController.createCategory)
+router.patch("/categories/:id", CategoryController.updateCategoryById)
+router.delete("/categories/:id", CategoryController.deleteCategoryById)
 
 
 
