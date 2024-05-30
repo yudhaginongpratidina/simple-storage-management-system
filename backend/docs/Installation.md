@@ -23,10 +23,11 @@ APP_PORT=8000
 APP_HOST=localhost
 
 
+
 # ==================================================
-# KONFIGURASI DATABASE
+# KONFIGURASI ENVIRONMENT DATABASE (SEQUILIZE)
 # ==================================================
-DATABASE_URL="mysql://johndoe:randompassword@localhost:3306/mydb"
+NODE_ENV=development
 ```
 
 ## MELAKUKAN MIGRATE DATABASE

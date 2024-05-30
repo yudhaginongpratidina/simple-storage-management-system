@@ -1,4 +1,3 @@
-const prisma = require('../libs/prisma');
 const { Product, Category } = require('../models');
 
 class ProductController {
