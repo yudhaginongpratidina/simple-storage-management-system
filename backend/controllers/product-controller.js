@@ -1,4 +1,4 @@
-const prisma = require('../libs/prisma');
+const { Product, Category } = require('../models');
 
 class ProductController {
 
@@ -7,24 +7,16 @@ class ProductController {
     // ------------------------------------------------
     static async getAllProductByUserId(req, res) {
         try {
-
-            // ambil id user dari params
             const { userid } = req.params;
 
-
-            // ambil semua product berdasarkan id user
-            const products = await prisma.products.findMany({
+            const products = await Product.findAll({
                 where: {
-
                     created_by: userid
                 },
                 include: {
-
-                    category: true,
+                    model: Category
                 }
             });
-
-
 
             return res.status(200).json({
                 message: 'Products found',
@@ -35,10 +27,7 @@ class ProductController {
             console.log(error);
         }
     }
-
-
-    // ------------------------------------------------------------
-    // MENAMBAH PRODUCT
+         
     // ------------------------------------------------------------
     static async addProductByUserId(req, res) {
         try {
@@ -46,29 +35,25 @@ class ProductController {
             const { name, qty, categoryId, url_product_image } = req.body;
 
 
-            const name_exist = await prisma.products.findFirst({
+            const name_exist = await Product.findAll({
                 where: {
                     name: name
                 }
             });
 
 
-            if (name_exist) {
+            if (name_exist > 0) {
                 return res.status(400).json({
                     message: 'Product already exist'
                 });
             }
 
-            const addNewProductByUdserId = await prisma.products.create({
-                data: {
-                    name: name,
-                    qty: qty,
-                    categoryId: categoryId,
-                    url_product_image: url_product_image,
-                    created_by: userid,
-                    updated_by: userid
-                }
-
+            const addNewProductByUdserId = await Product.create({
+                name: name,
+                qty: qty,
+                categoryId: categoryId,
+                url_product_image: url_product_image,
+                created_by: userid
             });
 
             return res.status(200).json({
@@ -93,37 +78,33 @@ class ProductController {
             const { userid, id } = req.params;
             const { name, qty, categoryId, url_product_image } = req.body;
 
-
-            const name_exist = await prisma.products.findFirst({
+            const nameExist = await Product.findOne({
                 where: {
                     name: name
                 }
             });
 
-            if (name_exist) {
+            if (nameExist) {
                 return res.status(400).json({
-                    message: 'Product already exist'
+                    message: 'Product already exists'
                 });
             }
 
-
-            const updateProductByUserId = await prisma.products.update({
+            const updatedProduct = await Product.update({
+                name: name,
+                qty: qty,
+                categoryId: categoryId,
+                url_product_image: url_product_image,
+                updated_by: userid
+            }, {
                 where: {
                     id: id
-                },
-                data: {
-                    name: name,
-                    qty: qty,
-                    categoryId: categoryId,
-                    url_product_image: url_product_image,
-                    updated_by: userid
                 }
             });
 
-
             return res.status(200).json({
-                message: 'Success update product',
-                data: updateProductByUserId
+                message: 'Product updated successfully',
+                data: updatedProduct
             });
 
         } catch (error) {
@@ -141,7 +122,7 @@ class ProductController {
         try {
             const { id } = req.params;
 
-            const product_exist = await prisma.products.findFirst({
+            const product_exist = await Product.findOne({
                 where: {
                     id: id
                 }
@@ -153,8 +134,7 @@ class ProductController {
                 });
             }
 
-            const deleteProductById = await prisma.products.delete({
-
+            const deleteProductById = await Product.destroy({
                 where: {
                     id: id
                 }

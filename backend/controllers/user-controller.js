@@ -1,4 +1,4 @@
-const prisma = require('../libs/prisma');
+const { User } = require('../models');
 const argon2 = require('argon2');
 
 class UserController {
@@ -8,7 +8,7 @@ class UserController {
     // =================================================================
     static async getUsers(req, res) {
         try {
-            const response = await prisma.user.findMany();
+            const response = await User.findAll();
             return res.status(200).json({
                 message: "Success",
                 data: response
@@ -26,7 +26,7 @@ class UserController {
             // TANGKAP ID DARI PARAMETER URL
             const { id } = req.params
 
-            const response = await prisma.user.findUnique({
+            const response = await User.findOne({
                 where: { id }
             })
 
@@ -44,40 +44,40 @@ class UserController {
     // =================================================================
     static async createUser(req, res) {
         try {
-            const {username, password} = req.body
-
-            // APAKAH USERNAME SUDAH PERNAH DIGUNAKAN
-            const username_exist = await prisma.user.findMany({
+            const { username, password } = req.body;
+    
+            // CEK APAKAH USERNAME SUDAH TERDAFTAR
+            const usernameExist = await User.findOne({
                 where: { username }
-            })
-
+            });
+    
             // JIKA USERNAME SUDAH DIGUNAKAN KIRIM ERROR
-            if (username_exist.length > 0) {
+            if (usernameExist) {
                 return res.status(400).json({
-                    message: `the ${username} has already been registered`
-                })
+                    message: `The username "${username}" has already been registered`
+                });
             }
-
+    
             // ENKRIPSI PASSWORD
-            const hash = await argon2.hash(password)
-
+            const hash = await argon2.hash(password);
+    
             // JIKA USERNAME BELUM PERNAH DI REGISTRASIKAN, MAKA LANJUTKAN
             // PROSES MEMBUAT USER BARU
-            const response = await prisma.user.create({
-                data: {
-                    username : username,
-                    password : hash
-                }
-            })
-
+            const newUser = await User.create({
+                username: username,
+                password: hash,
+                image: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+            });
+    
             // KIRIM RESPONSE JIKA USER BERHASIL TEREGISTRASI
             return res.status(200).json({
                 message: "Success",
-                data: response
+                data: newUser
             });
-
+    
         } catch (error) {
-            console.log(error)
+            console.error(error);
+            return res.status(500).json({ message: "Internal Server Error" });
         }
     }
 
@@ -89,7 +89,7 @@ class UserController {
         try {
             const { id } = req.params
     
-            const user_exist = await prisma.user.findUnique({
+            const user_exist = await User.findOne({
                 where: { id }
             })
     
@@ -99,10 +99,10 @@ class UserController {
                 })
             }
     
-            const response = await prisma.user.delete({
+            const response = await User.destroy({
                 where: { id }
             })
-    
+
             return res.status(200).json({
                 message: "Success",
                 data: response
@@ -122,7 +122,7 @@ class UserController {
         try {
             const { username, password } = req.body
             
-            const users_exist = await prisma.user.findMany({
+            const users_exist = await User.findAll({
                 where: { username }
             })
     

@@ -3,8 +3,10 @@
 ## PACKAGE YANG DIPAKAI DI SISI BACKEND
 
 * nodemon
-* prisma
-* @prisma/client
+* mysql2
+* pg
+* sequelize
+* sequelize-cli
 * express
 * cors
 * argon2
