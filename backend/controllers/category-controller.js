@@ -1,4 +1,4 @@
-const prisma = require('../libs/prisma');
+const { Category } = require('../models');
 
 
 class CategoryController {
@@ -8,7 +8,7 @@ class CategoryController {
     // =================================================================
     static async getCategories(req, res) {
         try {
-            const response = await prisma.category.findMany();
+            const response = await Category.findAll();
             return res.status(200).json({
                 message: "Success",
                 data: response
@@ -24,9 +24,9 @@ class CategoryController {
     static async getCategoryById(req, res) {
         try {
             const { id } = req.params;
-            const response = await prisma.category.findUnique({
+            const response = await Category.findOne({
                 where: { id }
-            });
+            })
             return res.status(200).json({
                 message: "Success",
                 data: response
@@ -43,34 +43,37 @@ class CategoryController {
         try {
             const { id } = req.params;
             const { name } = req.body;
-
-            const name_check = await prisma.category.findMany({
+    
+            // Periksa apakah nama kategori sudah ada selain kategori dengan id yang sama
+            const nameExist = await Category.findOne({
                 where: {
-                    name
+                    name : name,
                 }
             });
-
-            if (name_check.length > 0) {
+    
+            // Jika nama kategori sudah ada, kirim respons error
+            if (nameExist) {
                 return res.status(400).json({
-                    message: "Category data has been added"
+                    message: "Category with this name already exists"
                 });
             }
-
-            const response = await prisma.category.update({
-                where: { id },
-                data: {
-                    name
-                }
-            });
-
+    
+            // Perbarui kategori dengan id yang sesuai
+            const response = await Category.update(
+                { name: name },
+                { where: { id: id } }
+            );
+    
+            // Kirim respons sukses
             return res.status(200).json({
                 message: "Success",
                 data: response
             });
         } catch (error) {
-            
+            console.error("Error updating category:", error);
         }
     }
+    
 
     // =================================================================
     // MEMBUAT ATAU MENAMBAH DATA CATEGORY BARU
@@ -79,7 +82,7 @@ class CategoryController {
         try {
             const { name } = req.body;
     
-            const name_check = await prisma.category.findMany({
+            const name_check = await Category.findAll({
                 where: {
                     name
                 }
@@ -91,10 +94,8 @@ class CategoryController {
                 });
             }
     
-            const response = await prisma.category.create({
-                data: {
-                    name
-                }
+            const response = await Category.create({
+                name : name
             });
     
             return res.status(201).json({
@@ -114,7 +115,7 @@ class CategoryController {
         try {
             const { id } = req.params;
 
-            const category_check = await prisma.category.findUnique({
+            const category_check = await Category.findOne({
                 where: { id }
             });
     
@@ -124,9 +125,10 @@ class CategoryController {
                 });
             }
 
-            const response = await prisma.category.delete({
+            const response = await Category.destroy({
                 where: { id }
-            });
+            })
+
             return res.status(200).json({
                 message: "Success",
                 data: response
