@@ -9,14 +9,14 @@ module.exports = {
       {
         username: 'admin',
         password: await argon2.hash('administrator'),
-        image: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+        image: null,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         username: 'user',
         password: await argon2.hash('user'),
-        image: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+        image: null,
         createdAt: new Date(),
         updatedAt: new Date()
       }

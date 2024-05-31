@@ -1,7 +1,13 @@
+// ===================================================================
+// IMPORT LIBRARY
+// ===================================================================
 const { User } = require('../models');
 const argon2 = require('argon2');
+const path = require('path');
+const fs = require('fs');
 
 class UserController {
+
 
     // =================================================================
     // MENDAPATKAN SEMUA DATA USER
@@ -18,17 +24,18 @@ class UserController {
         }
     }
 
+
+
+
+
     // =================================================================
     // MENDAPATKAN USER BERDASARKAN ID
     // =================================================================
     static async getUserById(req, res) {
         try {
-            // TANGKAP ID DARI PARAMETER URL
             const { id } = req.params
 
-            const response = await User.findOne({
-                where: { id }
-            })
+            const response = await User.findOne({ where: { id }})
 
             return res.status(200).json({
                 message: "Success",
@@ -39,14 +46,21 @@ class UserController {
         }
     }
 
+
+
+
+
     // =================================================================
     // MEMBUAT USER BARU
     // =================================================================
     static async createUser(req, res) {
         try {
             const { username, password } = req.body;
+            const image = req.file;
+            const imagePath = image ? image.filename : null;
     
-            // CEK APAKAH USERNAME SUDAH TERDAFTAR
+            // APAKAH USERNAME SUDAH TERDAFTAR
+            // --------------------------------------------------------
             const usernameExist = await User.findOne({
                 where: { username }
             });
@@ -59,18 +73,21 @@ class UserController {
             }
     
             // ENKRIPSI PASSWORD
+            // --------------------------------------------------------
             const hash = await argon2.hash(password);
     
-            // JIKA USERNAME BELUM PERNAH DI REGISTRASIKAN, MAKA LANJUTKAN
-            // PROSES MEMBUAT USER BARU
+
+            // USERNAME BELUM PERNAH DIDAFTARKAN
+            // ----------------------------------------------------------
             const newUser = await User.create({
                 username: username,
                 password: hash,
-                image: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+                image: imagePath
             });
     
-            // KIRIM RESPONSE JIKA USER BERHASIL TEREGISTRASI
-            return res.status(200).json({
+            // RESPONSE BERHASIL
+            // -----------------------------------------------------------
+            return res.status(201).json({
                 message: "Success",
                 data: newUser
             });
@@ -80,6 +97,104 @@ class UserController {
             return res.status(500).json({ message: "Internal Server Error" });
         }
     }
+
+
+
+
+
+    // =================================================================
+    // MENGUPDATE USER BERDASARKAN ID
+    // =================================================================
+    static async updateUserById(req, res) {
+        try {
+            const { id } = req.params
+            const { password } = req.body
+            const image = req.file
+            const imagePath = image ? image.filename : null;
+
+            // PENCARIAN DATA USER
+            // ---------------------------------------------------------
+            const user_exist = await User.findOne({
+                where: { id }
+            })
+            
+            // DATA USER TIDAK DITEMUKAN
+            // ---------------------------------------------------------
+            if (!user_exist) {
+                return res.status(400).json({
+                    message: `the user with ID ${id} not found`
+                })
+            }
+            
+            // JIKA IMAGE PATH = NULL => UPDATE PASSWORDNYA SAJA
+            // ---------------------------------------------------------
+            if (imagePath === null) {
+                const hash = await argon2.hash(password);
+
+                const response = await User.update(
+                    { password: hash}, 
+                    { where: { id }}
+                )
+
+                return res.status(200).json({
+                    message: "Success",
+                    data: response
+                });
+            } else {                
+                // CEK PATH IMAGE LAMA ADA ATAU TIDAK
+                // ---------------------------------------------------------
+                const image_path_old = user_exist.image;
+
+
+                // JIKA PATH IMAGE LAMA = NULL => UPDATE PATHNYA DENGAN PATH IMAGE BARU
+                // ---------------------------------------------------------------------
+                if (image_path_old === null) {
+                    const hash = await argon2.hash(password);
+
+                    const response = await User.update({
+                        password : hash,
+                        image: imagePath
+                    }, {
+                        where: { id }
+                    })
+
+                    return res.status(200).json({
+                        message: "Success",
+                        data: response
+                    })
+                }
+
+                // JIKA PATH IMAGE LAMA TIDAK = NULL => UPDATE PATHNYA DENGAN PATH IMAGE BARU
+                // TAPI HAPUS DULU FILE LAMANYA
+                // ---------------------------------------------------------------------
+                if (image_path_old !== null) {
+                    const image_path = path.join(__dirname, `../public/images/${image_path_old}`);
+                    fs.unlinkSync(image_path)
+
+                    const hash = await argon2.hash(password);
+
+                    const response = await User.update({
+                        password : hash,
+                        image: imagePath
+                    }, {
+                        where: { id }
+                    })
+
+                    return res.status(200).json({
+                        message: "Success",
+                        data: response
+                    })
+                }
+            }
+
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+
+
+
 
 
     // =================================================================
@@ -92,13 +207,25 @@ class UserController {
             const user_exist = await User.findOne({
                 where: { id }
             })
-    
+
+            
             if (!user_exist) {
                 return res.status(400).json({
                     message: `the user with ID ${id} not found`
                 })
             }
     
+            // HAPUS FILE IMAGE DARI FOLDER PUBLIC JIKA PATH NYA TIDAK SAMA DENGAN NULL
+            // SEBELUM DATA USER DIHAPUS DARI DATABASE
+            // ------------------------------------------------------------------------
+            const imagePath = user_exist.image;
+    
+            if (imagePath !== null) {
+                const image_path = path.join(__dirname, `../public/images/${imagePath}`);
+                fs.unlinkSync(image_path)
+            }
+
+
             const response = await User.destroy({
                 where: { id }
             })
@@ -114,6 +241,11 @@ class UserController {
             })
         }
     }
+
+
+
+
+
 
     // =================================================================
     // MELAKUKAN LOGIN
@@ -153,7 +285,6 @@ class UserController {
             })
         }
     }
-    
     
 }
 
