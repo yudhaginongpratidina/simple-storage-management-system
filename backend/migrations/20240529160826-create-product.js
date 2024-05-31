@@ -19,7 +19,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       url_product_image: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       created_by: {
         type: Sequelize.INTEGER

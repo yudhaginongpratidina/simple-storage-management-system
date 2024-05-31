@@ -32,5 +32,19 @@ http://localhost:8000/users
 
 ## API UNTUK PRODUCT
 
+| **METHOD** | **END POINT**            | **DESKRIPSI**                                 |
+|------------|--------------------------|-----------------------------------------------|
+| GET        | /products/:userid        | Semua product berdasarkan id user             |
+| GET        | /products/:userid/:id    | Detail product berdasarkan id user            |
+| POST       | /products/:userid        | Tambah product berdasarkan id user            |
+| PATCH      | /products/:userid/:id    | Update product berdasarkan id user            |
+| DELETE     | /products/:id            | Menghapus product berdasarkan id user         |
+
+
 
 ## API UNTUK AKSES IMAGE
+
+
+| **METHOD** | **END POINT**                | **DESKRIPSI**                                 |
+|------------|------------------------------|-----------------------------------------------|
+| GET        | /public/images/:filename     | Akses image berdasarkan filename              |

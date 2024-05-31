@@ -7,15 +7,15 @@ module.exports = {
   async up (queryInterface, Sequelize) {
     await queryInterface.bulkInsert('Users', [
       {
-        username: 'admin',
-        password: await argon2.hash('administrator'),
+        username: 'user1',
+        password: await argon2.hash('user1'),
         image: null,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
-        username: 'user',
-        password: await argon2.hash('user'),
+        username: 'user2',
+        password: await argon2.hash('user2'),
         image: null,
         createdAt: new Date(),
         updatedAt: new Date()

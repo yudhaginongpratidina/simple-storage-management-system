@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     qty: DataTypes.INTEGER,
     categoryId: DataTypes.INTEGER,
-    url_product_image: DataTypes.INTEGER,
+    url_product_image: DataTypes.STRING,
     created_by: DataTypes.INTEGER,
     updated_by: DataTypes.INTEGER
   }, {

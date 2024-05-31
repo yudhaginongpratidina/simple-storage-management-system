@@ -1,4 +1,6 @@
 const { Product, Category } = require('../models');
+const path = require('path');
+const fs = require('fs');
 
 class ProductController {
 
@@ -27,45 +29,76 @@ class ProductController {
             console.log(error);
         }
     }
+
+    // ------------------------------------------------------------
+    // MENAMPILKAN DETAIL PRODUCT BERDASARKAN ID
+    // ------------------------------------------------------------
+    static async getProductById(req, res) {
+        try {
+            const { id } = req.params;
+            const product = await Product.findOne({
+                where: {
+                    id: id
+                },
+                include: {
+                    model: Category
+                }
+            });
+            return res.status(200).json({
+                message: 'Product found',
+                data: product
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
          
+    // ------------------------------------------------------------
+    // MENAMBAH PRODUCT BERDASARKAN ID USER
     // ------------------------------------------------------------
     static async addProductByUserId(req, res) {
         try {
             const { userid } = req.params;
-            const { name, qty, categoryId, url_product_image } = req.body;
-
-
-            const name_exist = await Product.findAll({
+            const { name, qty, categoryId } = req.body;
+            const image = req.file;
+            const imagePath = image ? image.filename : null;
+    
+            // Periksa apakah produk sudah ada
+            const existingProduct = await Product.findAll({
                 where: {
                     name: name
                 }
             });
-
-
-            if (name_exist > 0) {
+    
+            // Jika produk sudah ada, kirim respons 400
+            if (existingProduct.length > 0) {
                 return res.status(400).json({
-                    message: 'Product already exist'
+                    message: 'Product already exists'
                 });
             }
-
-            const addNewProductByUdserId = await Product.create({
+    
+            // Jika produk belum ada, tambahkan produk baru
+            const newProduct = await Product.create({
                 name: name,
-                qty: qty,
+                qty: (qty),
                 categoryId: categoryId,
-                url_product_image: url_product_image,
-                created_by: userid
+                url_product_image: imagePath,
+                created_by: userid,
+                updated_by: userid
             });
-
+    
+            // Kirim respons 200 dengan data produk yang baru ditambahkan
             return res.status(200).json({
-                message: 'Success add product',
-                data: addNewProductByUdserId
+                message: 'Product added successfully',
+                data: newProduct
             });
-
+    
         } catch (error) {
+            // Tangani kesalahan dengan memberikan respons yang sesuai
             console.log(error);
-
         }
     }
+    
 
 
     
@@ -73,42 +106,70 @@ class ProductController {
     // UPDATE PRODUCT
     // ------------------------------------------------------------
     static async updateProductByUserId(req, res) {
-
         try {
             const { userid, id } = req.params;
-            const { name, qty, categoryId, url_product_image } = req.body;
-
-            const nameExist = await Product.findOne({
-                where: {
-                    name: name
-                }
-            });
-
-            if (nameExist) {
-                return res.status(400).json({
-                    message: 'Product already exists'
-                });
-            }
-
-            const updatedProduct = await Product.update({
-                name: name,
-                qty: qty,
-                categoryId: categoryId,
-                url_product_image: url_product_image,
-                updated_by: userid
-            }, {
+            const { name, qty, categoryId } = req.body;
+            const image = req.file;
+            const imagePath = image ? image.filename : null;
+    
+            const productExist = await Product.findOne({
                 where: {
                     id: id
                 }
             });
+    
+            if (!productExist) {
+                return res.status(404).json({
+                    message: 'Product not found'
+                });
+            }
 
+            const name_exist = await Product.findOne({
+                where: {
+                    name: name
+                }
+            });
+    
+            if (name_exist && name_exist.id !== id) {
+                return res.status(400).json({
+                    message: 'Product name already exists'
+                });
+            }
+    
+            const productToUpdate = await Product.findOne({
+                where: {
+                    id: id
+                }
+            });
+    
+            // Simpan URL gambar lama
+            const oldImagePath = productToUpdate.url_product_image;
+    
+            // Perbarui produk
+            await productToUpdate.update({
+                name: name,
+                qty: qty,
+                categoryId: categoryId,
+                url_product_image: imagePath,
+                updatedAt: new Date(),
+                updated_by: userid
+            });
+    
+            // Hapus gambar lama jika ada
+            if (oldImagePath && imagePath && oldImagePath !== imagePath) {
+                const oldImagePathToDelete = path.join(__dirname, `../public/images/${oldImagePath}`);
+                fs.unlinkSync(oldImagePathToDelete);
+            }
+    
             return res.status(200).json({
                 message: 'Product updated successfully',
-                data: updatedProduct
+                data: productToUpdate
             });
-
         } catch (error) {
             console.log(error);
+            return res.status(500).json({
+                message: 'Internal server error'
+            });
         }
     }
 
@@ -132,6 +193,13 @@ class ProductController {
                 return res.status(400).json({
                     message: 'Product not found'
                 });
+            }
+
+            const imagePath = product_exist.url_product_image;
+
+            if (imagePath !== null) {
+                const image_path = path.join(__dirname, `../public/images/${imagePath}`);
+                fs.unlinkSync(image_path);
             }
 
             const deleteProductById = await Product.destroy({
