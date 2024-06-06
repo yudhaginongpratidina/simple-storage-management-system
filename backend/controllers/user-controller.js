@@ -67,7 +67,7 @@ class UserController {
     
             // JIKA USERNAME SUDAH DIGUNAKAN KIRIM ERROR
             if (usernameExist) {
-                return res.status(400).json({
+                return res.json({
                     message: `The username "${username}" has already been registered`
                 });
             }
@@ -88,7 +88,7 @@ class UserController {
             // RESPONSE BERHASIL
             // -----------------------------------------------------------
             return res.status(201).json({
-                message: "Success",
+                message: "Register Success",
                 data: newUser
             });
     
@@ -259,7 +259,7 @@ class UserController {
             })
     
             if (users_exist.length === 0) { 
-                return res.status(400).json({
+                return res.json({
                     message: `User '${username}' not found`
                 })
             }
@@ -269,19 +269,19 @@ class UserController {
             const match = await argon2.verify(user_exist.password, password)
     
             if (!match) {
-                return res.status(400).json({
+                return res.json({
                     message: `Wrong password`
                 })
             }
     
             return res.status(200).json({
-                message: "Success",
+                message: "Login Success",
                 data: user_exist
             });
         } catch (error) {
             console.error(error)
-            return res.status(500).json({
-                message: "Internal Server Error"
+            return res.json({
+                message: error
             })
         }
     }

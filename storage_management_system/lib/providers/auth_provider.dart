@@ -1,31 +1,30 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:storage_management_system/screens/main_screen.dart';
 
 class AuthProvider extends ChangeNotifier {
-  // PREFERENCE
   late SharedPreferences _sharedPref;
 
-  // GLOBAL STATE
   final formAuthentication = GlobalKey<FormState>();
   StateAuth authState = StateAuth.initial;
 
-  // TEXT CONTROLLERS
-  TextEditingController emailController = TextEditingController();
+  TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  // VARIABLES
   var formTitle = 'Sign In';
-  var email = '';
+  var username = '';
   var password = '';
   var messageError = '';
   bool obscurePassword = true;
 
-// FOR UPDATE FORM TITLE
+  // ==========================================================================================
+  // FUNGSI UNTUK UPDATE TITLE
+  // ==========================================================================================
   void updateFormTitle() {
     if (formTitle == 'Sign In') {
       formTitle = 'Sign Up';
-      emailController.clear();
+      usernameController.clear();
       passwordController.clear();
     } else {
       formTitle = 'Sign In';
@@ -35,56 +34,111 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-// FOR PROCESS LOGIN
+  // ==========================================================================================
+  // FUNGSI UNTUK HANDLE LOGIN
+  // ==========================================================================================
   void processLogin(BuildContext context) async {
-    // INITIALIZE PREFERENCE
     _sharedPref = await SharedPreferences.getInstance();
 
-    if (emailController.text == 'admin' &&
-        passwordController.text == 'administrator') {
-      authState = StateAuth.success;
-      alertAuthSuccess(context, 'Login Success');
+    try {
+      var requestModel = {
+        'username': usernameController.text,
+        'password': passwordController.text
+      };
 
-      // SAVE DATA TO PREFERENCE
-      _sharedPref.setString('email', emailController.text);
-    } else {
-      authState = StateAuth.error;
-      alertAuthFailed(context, 'Credentials Invalid');
+      var response =
+          await Dio().post('http://192.168.1.5:3000/login', data: requestModel);
+
+      if (response.statusCode == 200 &&
+          response.data['message'] == 'Login Success') {
+        _sharedPref.setInt('id', response.data['data']['id']);
+        _sharedPref.setString('username', response.data['data']['username']);
+        alertAuthSuccess(context, response.data['message']);
+      } else {
+        alertAuthFailed(context, response.data['message']);
+      }
+    } on DioException catch (e) {
+      alertAuthFailed(context, 'Error: ${e.message}');
     }
 
     notifyListeners();
   }
 
-// FOR ALERT IF AUTH SUCCESS
+  // ==========================================================================================
+  // FUNGSI UNTUK HANDLE REGISTER
+  // ==========================================================================================
+  Future processRegister(BuildContext context) async {
+    _sharedPref = await SharedPreferences.getInstance();
+
+    try {
+      var requestModel = {
+        'username': usernameController.text,
+        'password': passwordController.text
+      };
+      var response = await Dio()
+          .post('http://192.168.1.5:3000/register', data: requestModel);
+
+      if (response.statusCode == 201) {
+        alertAuthSuccess(context, response.data['message']);
+
+        _sharedPref.setInt('id', response.data['data']['id']);
+        _sharedPref.setString('username', response.data['data']['username']);
+      } else {
+        alertAuthFailed(context, response.data['message']);
+      }
+    } on DioException catch (e) {
+      alertAuthFailed(context, 'Error: ${e.message}');
+    }
+
+    notifyListeners();
+  }
+
+  // ==========================================================================================
+  // FUNGSI UNTUK ALERT SUCCESS
+  // ==========================================================================================
   void alertAuthSuccess(BuildContext context, String message) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          icon: const Icon(Icons.check_circle_outline,
-              color: Colors.green, size: 50),
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(4.0),
-            ),
-          ),
-          title: Text(
-            message,
-            textAlign: TextAlign.center,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.check_circle_outline,
+                  color: Colors.green, size: 50),
+              const SizedBox(height: 8),
+              Text(
+                message,
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
           actions: [
             TextButton(
               onPressed: () {
                 if (formTitle == 'Sign In') {
-                  emailController.clear();
+                  usernameController.clear();
                   passwordController.clear();
                   Navigator.of(context).popUntil((route) => route.isFirst);
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => MainScreen(
-                              email: _sharedPref.getString('email'),
-                            )),
+                      builder: (context) => MainScreen(
+                        username: _sharedPref.getString('username'),
+                      ),
+                    ),
+                  );
+                } else if (formTitle == 'Sign Up') {
+                  usernameController.clear();
+                  passwordController.clear();
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MainScreen(
+                        username: _sharedPref.getString('username'),
+                      ),
+                    ),
                   );
                 } else {
                   Navigator.pop(context);
@@ -96,25 +150,27 @@ class AuthProvider extends ChangeNotifier {
         );
       },
     );
-    notifyListeners();
   }
 
-// FOR ALERT IF AUTH FAILED
+  // ==========================================================================================
+  // FUNGSI UNTUK ALERT FAILED
+  // ==========================================================================================
   void alertAuthFailed(BuildContext context, String message) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          icon: const Icon(Icons.error_outline_rounded,
-              color: Colors.red, size: 50),
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(4.0),
-            ),
-          ),
-          title: Text(
-            message,
-            textAlign: TextAlign.center,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.error_outline_rounded,
+                  color: Colors.red, size: 50),
+              const SizedBox(height: 8),
+              Text(
+                message,
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
           actions: [
             TextButton(
@@ -125,32 +181,34 @@ class AuthProvider extends ChangeNotifier {
         );
       },
     );
-    notifyListeners();
   }
 
-// FOR TOGGLE OBSCURE PASSWORD
+  // ==========================================================================================
+  //  FUNCTION FOR HIDE AND SHOW PASSWORD
+  // ==========================================================================================
   void changeObscurePassword() {
     obscurePassword = !obscurePassword;
     notifyListeners();
   }
 
-// FOR ALERT IF FIELD EMPTY
-  void showAlertFieldEmpty(
-    BuildContext context,
-  ) {
+  // ==========================================================================================
+  //  FUNCTION ALERT FIELD EMPTY
+  // ==========================================================================================
+  void showAlertFieldEmpty(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          icon: const Icon(Icons.error_outline, color: Colors.red, size: 50),
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(4.0),
-            ),
-          ),
-          title: const Text(
-            'Please fill in the fields',
-            textAlign: TextAlign.center,
+          content: const Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.error_outline, color: Colors.red, size: 50),
+              SizedBox(height: 8),
+              Text(
+                'Please fill in the fields',
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
           actions: [
             TextButton(

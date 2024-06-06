@@ -26,9 +26,9 @@ class _SplashScreenState extends State<SplashScreen> {
   // ============================================================================
   Future<void> loadingData() async {
     SharedPreferences sharedPref = await SharedPreferences.getInstance();
-    var email = sharedPref.getString('email');
+    var username = sharedPref.getString('username');
     Future.delayed(const Duration(seconds: 3), () {
-      if (email == null) {
+      if (username == null) {
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
@@ -38,7 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => MainScreen(email: email),
+              builder: (context) => MainScreen(username: username),
             ));
       }
     });

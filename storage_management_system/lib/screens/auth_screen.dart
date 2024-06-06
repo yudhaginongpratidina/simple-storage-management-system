@@ -69,7 +69,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             horizontal: 10, vertical: 50),
                         children: [
                           TextFormField(
-                            controller: authProvider.emailController,
+                            controller: authProvider.usernameController,
                             keyboardType: TextInputType.emailAddress,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -78,9 +78,9 @@ class _AuthScreenState extends State<AuthScreen> {
                               return null;
                             },
                             decoration: const InputDecoration(
-                              labelText: 'Email',
+                              labelText: 'Username',
                               border: OutlineInputBorder(),
-                              prefixIcon: Icon(Icons.email),
+                              prefixIcon: Icon(Icons.person),
                             ),
                           ),
                           const SizedBox(height: 10),
@@ -90,8 +90,8 @@ class _AuthScreenState extends State<AuthScreen> {
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter some text';
-                              } else if (value.length < 6) {
-                                return 'Password must be at least 6 characters';
+                              } else if (value.length < 3) {
+                                return 'Password must be at least 3 characters';
                               }
                               return null;
                             },
@@ -123,8 +123,12 @@ class _AuthScreenState extends State<AuthScreen> {
                               if (authProvider.formAuthentication.currentState!
                                   .validate()) {
                                 authProvider.formTitle == 'Sign In'
-                                    ? authProvider.processLogin(context)
-                                    : authProvider.showAlertFieldEmpty(context);
+                                    ? context
+                                        .read<AuthProvider>()
+                                        .processLogin(context)
+                                    : context
+                                        .read<AuthProvider>()
+                                        .processRegister(context);
                               } else {
                                 authProvider.showAlertFieldEmpty(context);
                               }

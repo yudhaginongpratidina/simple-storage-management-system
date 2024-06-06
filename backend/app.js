@@ -23,9 +23,7 @@ app.use(routes);
 // =======================================================================
 // KONFIGURASI SERVER LISTENER
 // =======================================================================
-const HOSTNAME = process.env.APP_HOST || "localhost";
-const PORT = process.env.APP_PORT || 4000;
 
-app.listen(PORT, HOSTNAME, () => {
-    console.log(`Server running at http://${HOSTNAME}:${PORT}`);
+app.listen(3000, () => {
+    console.log(`Server running at http://localhost:3000`);
 })
