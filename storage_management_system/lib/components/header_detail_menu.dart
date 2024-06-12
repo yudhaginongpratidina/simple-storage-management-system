@@ -5,6 +5,7 @@ class HeaderDetailMenu extends StatefulWidget {
   final Icon icon;
   final bool backToHome;
   final Function()? onPressed;
+  final String? username;
 
   const HeaderDetailMenu({
     super.key,
@@ -12,6 +13,7 @@ class HeaderDetailMenu extends StatefulWidget {
     required this.icon,
     required this.backToHome,
     this.onPressed,
+    this.username,
   });
 
   @override
@@ -32,14 +34,25 @@ class _HeaderDetailMenuState extends State<HeaderDetailMenu> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(widget.icon.icon, size: 100, color: Colors.white),
-          Text(
-            widget.menuTitle,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
+          if (widget.menuTitle != "Account")
+            Text(
+              widget.menuTitle,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
+          const SizedBox(height: 1.50),
+          if (widget.username != null)
+            Text(
+              widget.username!,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
           const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

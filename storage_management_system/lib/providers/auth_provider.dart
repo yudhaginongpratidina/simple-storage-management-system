@@ -17,6 +17,7 @@ class AuthProvider extends ChangeNotifier {
   var password = '';
   var messageError = '';
   bool obscurePassword = true;
+  String url = 'http://10.0.2.2:3000';
 
   // ==========================================================================================
   // FUNGSI UNTUK UPDATE TITLE
@@ -37,7 +38,7 @@ class AuthProvider extends ChangeNotifier {
   // ==========================================================================================
   // FUNGSI UNTUK HANDLE LOGIN
   // ==========================================================================================
-  void processLogin(BuildContext context) async {
+  Future processLogin(BuildContext context) async {
     _sharedPref = await SharedPreferences.getInstance();
 
     try {
@@ -46,8 +47,7 @@ class AuthProvider extends ChangeNotifier {
         'password': passwordController.text
       };
 
-      var response =
-          await Dio().post('http://192.168.1.5:3000/login', data: requestModel);
+      var response = await Dio().post('$url/login', data: requestModel);
 
       if (response.statusCode == 200 &&
           response.data['message'] == 'Login Success') {
@@ -75,8 +75,7 @@ class AuthProvider extends ChangeNotifier {
         'username': usernameController.text,
         'password': passwordController.text
       };
-      var response = await Dio()
-          .post('http://192.168.1.5:3000/register', data: requestModel);
+      var response = await Dio().post('$url/register', data: requestModel);
 
       if (response.statusCode == 201) {
         alertAuthSuccess(context, response.data['message']);

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:storage_management_system/components/alert_logout.dart';
 import 'package:storage_management_system/screens/about_screen.dart';
+import 'package:storage_management_system/screens/acount_screen.dart';
 import 'package:storage_management_system/screens/category_screen.dart';
+import 'package:storage_management_system/screens/product_screen.dart';
 
 class MenuHome extends StatefulWidget {
   const MenuHome({super.key});
@@ -77,10 +79,29 @@ class _MenuHomeState extends State<MenuHome> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const CategoryScreen(),
+                        builder: (context) => CategoryScreen(),
                       ),
                     );
                   }
+
+                  if (menuName[index] == 'Products') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ProductScreen(),
+                      ),
+                    );
+                  }
+
+                  if (menuName[index] == 'Account') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AcountScreen(),
+                      ),
+                    );
+                  }
+
                   if (menuName[index] == 'About') {
                     Navigator.push(
                       context,

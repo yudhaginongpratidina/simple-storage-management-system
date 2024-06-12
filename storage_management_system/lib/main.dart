@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storage_management_system/providers/auth_provider.dart';
+import 'package:storage_management_system/providers/category_provider.dart';
 import 'package:storage_management_system/screens/splash_screen.dart';
 
 void main() {
-  runApp(StorageManagementSystem());
+  runApp(const StorageManagementSystem());
 }
 
 class StorageManagementSystem extends StatelessWidget {
@@ -19,6 +20,9 @@ class StorageManagementSystem extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (context) => AuthProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => CategoryProvider(),
         )
       ],
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:storage_management_system/screens/acount_screen.dart';
 
 class HeaderHome extends StatefulWidget {
   final String? username;
@@ -17,7 +18,7 @@ class _HeaderHomeState extends State<HeaderHome> {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     return Container(
-      decoration: BoxDecoration(),
+      decoration: const BoxDecoration(),
       height: height * 0.23,
       width: width,
       child: Padding(
@@ -37,7 +38,12 @@ class _HeaderHomeState extends State<HeaderHome> {
                 ),
                 const Spacer(),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const AcountScreen()));
+                  },
                   icon: const Icon(
                     Icons.person,
                     color: Colors.white,

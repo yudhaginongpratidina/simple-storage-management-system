@@ -53,7 +53,7 @@ class CategoryController {
     
             // Jika nama kategori sudah ada, kirim respons error
             if (nameExist) {
-                return res.status(400).json({
+                return res.json({
                     message: "Category with this name already exists"
                 });
             }
@@ -66,7 +66,7 @@ class CategoryController {
     
             // Kirim respons sukses
             return res.status(200).json({
-                message: "Success",
+                message: "Category updated successfully",
                 data: response
             });
         } catch (error) {
@@ -89,7 +89,7 @@ class CategoryController {
             });
     
             if (name_check.length > 0) {
-                return res.status(400).json({
+                return res.json({
                     message: "Category data has been added"
                 });
             }
@@ -99,7 +99,7 @@ class CategoryController {
             });
     
             return res.status(201).json({
-                message: "Success",
+                message: "Category created successfully",
                 data: response
             });
         } catch (error) {
@@ -130,7 +130,7 @@ class CategoryController {
             })
 
             return res.status(200).json({
-                message: "Success",
+                message: "Category deleted successfully",
                 data: response
             });
         } catch (error) {
