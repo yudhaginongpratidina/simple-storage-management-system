@@ -33,12 +33,8 @@ const uploadImage = multer({
         fileSize: 5 * 1024 * 1024
     },
     fileFilter: (req, file, cb) => {
-        // Filter hanya untuk file gambar
-        if (file.mimetype.startsWith('image') && (file.mimetype.endsWith('jpeg') || file.mimetype.endsWith('jpg') || file.mimetype.endsWith('png'))) {
-            cb(null, true);
-        } else {
-            cb(new Error('Only images in jpeg, jpg, or png format are allowed!'));
-        }
+        // Always accept the file
+        cb(null, true);
     }
 });
 

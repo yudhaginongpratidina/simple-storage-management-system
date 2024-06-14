@@ -10,7 +10,7 @@ class CategoryProvider extends ChangeNotifier {
   CategoryState categoryState = CategoryState.initial;
 
   var name = '';
-  String url = 'http://10.0.2.2:3000';
+  String url = 'http://192.168.1.5:3000';
 
   // CONTROLLER
   TextEditingController nameController = TextEditingController();

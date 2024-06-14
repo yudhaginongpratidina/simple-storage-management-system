@@ -112,6 +112,8 @@ class UserController {
             const image = req.file
             const imagePath = image ? image.filename : null;
 
+            console.log(image)
+
             // PENCARIAN DATA USER
             // ---------------------------------------------------------
             const user_exist = await User.findOne({
@@ -121,7 +123,7 @@ class UserController {
             // DATA USER TIDAK DITEMUKAN
             // ---------------------------------------------------------
             if (!user_exist) {
-                return res.status(400).json({
+                return res.json({
                     message: `the user with ID ${id} not found`
                 })
             }
@@ -167,14 +169,13 @@ class UserController {
                 // JIKA PATH IMAGE LAMA TIDAK = NULL => UPDATE PATHNYA DENGAN PATH IMAGE BARU
                 // TAPI HAPUS DULU FILE LAMANYA
                 // ---------------------------------------------------------------------
-                if (image_path_old !== null) {
+                if (image_path_old !== null || password !== null || password === '') {
                     const image_path = path.join(__dirname, `../public/images/${image_path_old}`);
                     fs.unlinkSync(image_path)
 
                     const hash = await argon2.hash(password);
 
                     const response = await User.update({
-                        password : hash,
                         image: imagePath
                     }, {
                         where: { id }
@@ -189,6 +190,7 @@ class UserController {
 
         } catch (error) {
             console.error(error)
+            return res.status(500).json({ message: "Internal Server Error" });
         }
     }
 

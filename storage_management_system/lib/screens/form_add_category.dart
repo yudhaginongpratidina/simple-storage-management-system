@@ -51,7 +51,6 @@ class _FormAddCategoryState extends State<FormAddCategory> {
                         categoryProvider.createCategory(context);
                       } else {}
                     },
-                    child: const Text('Add Category'),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.all(15),
                       backgroundColor: Colors.indigo,
@@ -60,6 +59,7 @@ class _FormAddCategoryState extends State<FormAddCategory> {
                         borderRadius: BorderRadius.circular(3),
                       ),
                     ),
+                    child: const Text('Add Category'),
                   ),
                   const SizedBox(
                     height: 10,
@@ -68,7 +68,6 @@ class _FormAddCategoryState extends State<FormAddCategory> {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: const Text('Back'),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.all(15),
                       backgroundColor: Colors.redAccent[400],
@@ -77,6 +76,7 @@ class _FormAddCategoryState extends State<FormAddCategory> {
                         borderRadius: BorderRadius.circular(3),
                       ),
                     ),
+                    child: const Text('Back'),
                   ),
                 ],
               ),

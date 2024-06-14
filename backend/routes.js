@@ -44,8 +44,8 @@ router.patch("/categories/:id", CategoryController.updateCategoryById)
 router.delete("/categories/:id", CategoryController.deleteCategoryById)
 
 router.get("/products/:userid", ProductController.getAllProductByUserId)
-router.post("/products/:userid", uploadImage.single('image'), ProductController.addProductByUserId)
-router.patch("/products/:userid/:id", uploadImage.single('image'), ProductController.updateProductByUserId)
+router.post("/products/:userid", ProductController.addProductByUserId)
+router.patch("/products/:userid/:id", ProductController.updateProductByUserId)
 router.delete("/products/:id", ProductController.deleteProductById)
 router.get("/products/detail/:id", ProductController.getProductById)
 

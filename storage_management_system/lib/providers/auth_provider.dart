@@ -17,7 +17,7 @@ class AuthProvider extends ChangeNotifier {
   var password = '';
   var messageError = '';
   bool obscurePassword = true;
-  String url = 'http://10.0.2.2:3000';
+  String url = 'http://192.168.1.5:3000';
 
   // ==========================================================================================
   // FUNGSI UNTUK UPDATE TITLE
@@ -53,6 +53,9 @@ class AuthProvider extends ChangeNotifier {
           response.data['message'] == 'Login Success') {
         _sharedPref.setInt('id', response.data['data']['id']);
         _sharedPref.setString('username', response.data['data']['username']);
+
+        var image = response.data['data']['image'];
+        _sharedPref.setString('image', '$url/public/images/$image');
         alertAuthSuccess(context, response.data['message']);
       } else {
         alertAuthFailed(context, response.data['message']);
@@ -89,6 +92,51 @@ class AuthProvider extends ChangeNotifier {
       alertAuthFailed(context, 'Error: ${e.message}');
     }
 
+    notifyListeners();
+  }
+
+  // FUTURE DETAIL USER BY  ID
+  Future detailUser(BuildContext context) async {
+    _sharedPref = await SharedPreferences.getInstance();
+    try {
+      var id = _sharedPref.getInt('id');
+      var response = await Dio().get('$url/users/$id');
+
+      // SET PREFERENCE IMAGE
+      if (response.data['data']['image'] != null) {
+        // _sharedPref.setString('image', response.data['data']['image']);
+        var image = response.data['data']['image'];
+        _sharedPref.setString('image', '$url/public/images/$image');
+      }
+    } on DioException catch (e) {
+      alertAuthFailed(context, 'Error: ${e.message}');
+    }
+    notifyListeners();
+  }
+
+  Future updatePassword(BuildContext context) async {
+    _sharedPref = await SharedPreferences.getInstance();
+    try {
+      var id = _sharedPref.getInt('id');
+      if (id != null) {
+        if (passwordController.text.isNotEmpty) {
+          var requestModel = {'password': passwordController.text};
+          var response =
+              await Dio().patch('$url/users/$id', data: requestModel);
+          if (response.statusCode == 200) {
+            alertAuthSuccess(context, response.data['message']);
+          } else {
+            alertAuthFailed(context, response.data['message']);
+          }
+        } else {
+          showAlertFieldEmpty(context);
+        }
+      } else {
+        alertAuthFailed(context, 'User ID not found. Please log in again.');
+      }
+    } on DioException catch (e) {
+      alertAuthFailed(context, 'Error: ${e.message}');
+    }
     notifyListeners();
   }
 

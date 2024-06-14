@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storage_management_system/providers/auth_provider.dart';
 import 'package:storage_management_system/providers/category_provider.dart';
+import 'package:storage_management_system/providers/product_provider.dart';
 import 'package:storage_management_system/screens/splash_screen.dart';
 
 void main() {
@@ -23,6 +24,9 @@ class StorageManagementSystem extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => CategoryProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ProductProvider(),
         )
       ],
 

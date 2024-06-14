@@ -2,19 +2,21 @@ import 'package:flutter/material.dart';
 
 class HeaderDetailMenu extends StatefulWidget {
   final String menuTitle;
-  final Icon icon;
+  final Icon? icon;
+  final String? imageURL;
   final bool backToHome;
   final Function()? onPressed;
   final String? username;
 
   const HeaderDetailMenu({
-    super.key,
+    Key? key, // Mengubah super.key menjadi Key? key
     required this.menuTitle,
-    required this.icon,
+    this.imageURL,
+    this.icon,
     required this.backToHome,
     this.onPressed,
     this.username,
-  });
+  }) : super(key: key); // Menambahkan super(key: key)
 
   @override
   State<HeaderDetailMenu> createState() => _HeaderDetailMenuState();
@@ -33,7 +35,14 @@ class _HeaderDetailMenuState extends State<HeaderDetailMenu> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(widget.icon.icon, size: 100, color: Colors.white),
+          if (widget.imageURL != null)
+            Image.network(
+              widget.imageURL!,
+              width: 110,
+              height: 110,
+            ),
+          if (widget.icon != null)
+            Icon(widget.icon!.icon, size: 100, color: Colors.white),
           if (widget.menuTitle != "Account")
             Text(
               widget.menuTitle,
@@ -71,7 +80,8 @@ class _HeaderDetailMenuState extends State<HeaderDetailMenu> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Icon(widget.icon.icon),
+                      // Menggunakan widget.icon untuk mendapatkan icon
+                      if (widget.icon != null) Icon(widget.icon!.icon),
                       Text('Add ${widget.menuTitle}'),
                     ],
                   ),

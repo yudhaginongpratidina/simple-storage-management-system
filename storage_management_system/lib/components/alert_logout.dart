@@ -29,6 +29,7 @@ class AlertLogout {
                 SharedPreferences.getInstance().then((value) {
                   value.remove('id');
                   value.remove('username');
+                  value.remove('image');
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(

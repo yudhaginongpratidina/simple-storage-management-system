@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:storage_management_system/components/alert_logout.dart';
-import 'package:storage_management_system/screens/about_screen.dart';
+import 'package:storage_management_system/screens/about_screen.dart'; // Perbaikan nama file
 import 'package:storage_management_system/screens/acount_screen.dart';
 import 'package:storage_management_system/screens/category_screen.dart';
 import 'package:storage_management_system/screens/product_screen.dart';
 
 class MenuHome extends StatefulWidget {
-  const MenuHome({super.key});
+  const MenuHome({Key? key}) : super(key: key); // Menggunakan Key? key
 
   @override
   State<StatefulWidget> createState() => _MenuHomeState();
@@ -31,15 +31,9 @@ class _MenuHomeState extends State<MenuHome> {
 
   @override
   Widget build(BuildContext context) {
-    // -------------------------------------------
-    // SCREEN SIZE
-    // -------------------------------------------
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
 
-    // -------------------------------------------
-    // CONTAINER MENU
-    // -------------------------------------------
     return Container(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -52,9 +46,6 @@ class _MenuHomeState extends State<MenuHome> {
       width: width,
       child: Column(
         children: [
-          // --------------------------------------------------------------
-          // GRID VIEW FOR MENU -START
-          // --------------------------------------------------------------
           GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 4,
@@ -63,61 +54,54 @@ class _MenuHomeState extends State<MenuHome> {
             ),
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-
-            // --------------------------------------------------------------
-            // ITEM COUNT
-            // --------------------------------------------------------------
             itemCount: menuName.length,
-
             itemBuilder: (context, index) {
               return InkWell(
-                // --------------------------------------------------------------
-                // NAVIGATION
-                // --------------------------------------------------------------
-                onTap: () {
-                  if (menuName[index] == 'Category') {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CategoryScreen(),
-                      ),
-                    );
-                  }
-
-                  if (menuName[index] == 'Products') {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ProductScreen(),
-                      ),
-                    );
-                  }
-
-                  if (menuName[index] == 'Account') {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const AcountScreen(),
-                      ),
-                    );
-                  }
-
-                  if (menuName[index] == 'About') {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const AboutScreen(),
-                      ),
-                    );
-                  }
-                  if (menuName[index] == 'Log Out') {
-                    AlertLogout.show(context);
+                onTap: () async {
+                  // Tambahkan async
+                  try {
+                    // Tambahkan try-catch
+                    if (menuName[index] == 'Category') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CategoryScreen(),
+                        ),
+                      );
+                    }
+                    if (menuName[index] == 'Products') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ProductScreen(),
+                        ),
+                      );
+                    }
+                    if (menuName[index] == 'Account') {
+                      // Tambahkan await
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AcountScreen(),
+                        ),
+                      );
+                    }
+                    if (menuName[index] == 'About') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AboutScreen(),
+                        ),
+                      );
+                    }
+                    if (menuName[index] == 'Log Out') {
+                      AlertLogout.show(context);
+                    }
+                  } catch (e) {
+                    // Tangani pengecualian
+                    print('Error: $e');
                   }
                 },
-
-                // --------------------------------------------------------------
-                // STYLE MENU
-                // --------------------------------------------------------------
                 child: Container(
                   margin:
                       const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
@@ -132,10 +116,6 @@ class _MenuHomeState extends State<MenuHome> {
                       ),
                     ],
                   ),
-
-                  // --------------------------------------------------------------
-                  // LOOPING MENU
-                  // --------------------------------------------------------------
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -158,9 +138,6 @@ class _MenuHomeState extends State<MenuHome> {
               );
             },
           ),
-          // --------------------------------------------------------------
-          // GRID VIEW FOR MENU - END
-          // --------------------------------------------------------------
         ],
       ),
     );
