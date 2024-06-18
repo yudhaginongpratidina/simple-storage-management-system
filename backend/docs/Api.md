@@ -5,7 +5,7 @@ http://<hostname>:<port>/<endpoint>
 ```
 
 ```text
-http://localhost:8000/users
+http://localhost:3000/users
 ```
 
 ## API UNTUK USER DAN AUTHENTICATION
@@ -14,7 +14,7 @@ http://localhost:8000/users
 |------------|---------------|--------------------------------------|
 | GET        | /users        | Mendapatkan semua data user          |
 | GET        | /users/:id    | Mendapatkan data user berdasarkan id |
-| POST       | /users        | Membuat user baru / register         |
+| POST       | /register     | Membuat user baru / register         |
 | POST       | /login        | Login user                           |
 | DELETE     | /users/:id    | Menghapus data user berdasarkan id   |
 

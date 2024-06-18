@@ -29,11 +29,10 @@ router.get("/public/images/:filename", (req, res) => {
 // =======================================================================
 router.get("/users", userController.getUsers)
 router.get("/users/:id", userController.getUserById)
-router.post("/users", uploadImage.single('image'), userController.createUser)
 router.patch("/users/:id", uploadImage.single('image'), userController.updateUserById)
 router.delete("/users/:id", userController.deleteUserById)
 
-router.post("/register", uploadImage.single('image'), userController.createUser)
+router.post("/register", userController.createUser)
 router.post('/login', userController.loginUser)
 
 

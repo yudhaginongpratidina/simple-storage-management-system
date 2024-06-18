@@ -70,10 +70,6 @@ class CategoryProvider extends ChangeNotifier {
   Future detailCategory(BuildContext context, int id) async {
     try {
       var response = await Dio().get('$url/categories/$id');
-
-      // print(response.data);
-      // print(response.data['data']['name']);
-
       nameController.text = response.data['data']['name'];
     } on DioException catch (e) {
       alertFailed(context, 'Error: ${e.message}');

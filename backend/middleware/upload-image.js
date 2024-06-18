@@ -27,13 +27,10 @@ const storage = multer.diskStorage({
 // Middleware upload file
 const uploadImage = multer({
     storage: storage,
-
-    // LIMIT FILE SIZE 5 MB
     limits: {
         fileSize: 5 * 1024 * 1024
     },
     fileFilter: (req, file, cb) => {
-        // Always accept the file
         cb(null, true);
     }
 });

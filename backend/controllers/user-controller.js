@@ -56,8 +56,6 @@ class UserController {
     static async createUser(req, res) {
         try {
             const { username, password } = req.body;
-            const image = req.file;
-            const imagePath = image ? image.filename : null;
     
             // APAKAH USERNAME SUDAH TERDAFTAR
             // --------------------------------------------------------
@@ -82,7 +80,7 @@ class UserController {
             const newUser = await User.create({
                 username: username,
                 password: hash,
-                image: imagePath
+                image: null
             });
     
             // RESPONSE BERHASIL

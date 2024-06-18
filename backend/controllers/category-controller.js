@@ -120,7 +120,7 @@ class CategoryController {
             });
     
             if (!category_check) {
-                return res.status(404).json({
+                return res.json({
                     message: "Category not found"
                 });
             }
