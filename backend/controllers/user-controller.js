@@ -146,13 +146,10 @@ class UserController {
                 const image_path_old = user_exist.image;
 
 
-                // JIKA PATH IMAGE LAMA = NULL => UPDATE PATHNYA DENGAN PATH IMAGE BARU
-                // ---------------------------------------------------------------------
-                if (image_path_old === null) {
-                    const hash = await argon2.hash(password);
-
+                // // JIKA PATH IMAGE LAMA = NULL => UPDATE PATHNYA DENGAN PATH IMAGE BARU
+                // // ---------------------------------------------------------------------
+                if (image_path_old === null ) {
                     const response = await User.update({
-                        password : hash,
                         image: imagePath
                     }, {
                         where: { id }

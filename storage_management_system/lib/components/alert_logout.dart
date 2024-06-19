@@ -30,6 +30,7 @@ class AlertLogout {
                   value.remove('id');
                   value.remove('username');
                   value.remove('image');
+                  value.remove('password');
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(

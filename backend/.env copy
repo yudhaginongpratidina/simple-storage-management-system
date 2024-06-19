@@ -1,12 +1,4 @@
 # ==================================================
-# KONFIGURASI ENVIROMENT UNTUK APLIKASI BACKEND
-# ==================================================
-APP_PORT=8000
-APP_HOST=localhost
-
-
-
-# ==================================================
 # KONFIGURASI ENVIRONMENT DATABASE (SEQUILIZE)
 # ==================================================
 NODE_ENV=development

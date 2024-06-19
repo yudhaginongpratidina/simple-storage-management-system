@@ -17,7 +17,7 @@ class AuthProvider extends ChangeNotifier {
   var password = '';
   var messageError = '';
   bool obscurePassword = true;
-  String url = 'http://192.168.1.5:3000';
+  String url = 'http://192.168.1.6:3000';
 
   // ==========================================================================================
   // FUNGSI UNTUK UPDATE TITLE
@@ -53,6 +53,7 @@ class AuthProvider extends ChangeNotifier {
           response.data['message'] == 'Login Success') {
         _sharedPref.setInt('id', response.data['data']['id']);
         _sharedPref.setString('username', response.data['data']['username']);
+        _sharedPref.setString('password', response.data['data']['password']);
 
         var image = response.data['data']['image'];
         _sharedPref.setString('image', '$url/public/images/$image');

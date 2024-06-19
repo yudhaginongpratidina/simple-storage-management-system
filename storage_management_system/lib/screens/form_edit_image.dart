@@ -107,7 +107,7 @@ class _FormEditImageState extends State<FormEditImage> {
     try {
       if (pathFiles != null && pathFiles!.isNotEmpty) {
         var id = widget.id;
-        var url = 'http://192.168.1.5:3000';
+        var url = 'http://192.168.1.6:3000';
 
         var formData = FormData();
         formData.fields.addAll([
